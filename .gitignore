@@ -1,0 +1,31 @@
+# Database files (never commit these)
+*.db
+*.sqlite
+*.sqlite3
+*.mdb
+
+# Data dumps (can be large/sensitive)
+*.sql.gz
+*.dump
+data/raw/*
+!data/raw/.gitkeep
+
+# Environment / credentials (NEVER commit)
+.env
+*.env
+config.ini
+database.yml
+
+# Python (if using scripts to load data)
+__pycache__/
+venv/
+.venv/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
