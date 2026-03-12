@@ -1,15 +1,15 @@
 -- Labour Market Database Schema
 
 -- Drop tables if they exist for repeatability
-DROP TABLE IF EXISTS sector_employment CASCADE;
-DROP TABLE IF EXISTS labour_shocks CASCADE;
-DROP TABLE IF EXISTS age_participation CASCADE;
-DROP TABLE IF EXISTS labour_participation CASCADE;
-DROP TABLE IF EXISTS countries CASCADE;
+DROP TABLE IF EXISTS sector_employment;
+DROP TABLE IF EXISTS labour_shocks;
+DROP TABLE IF EXISTS age_participation;
+DROP TABLE IF EXISTS labour_participation;
+DROP TABLE IF EXISTS countries;
 
 -- Master countries table
 CREATE TABLE countries (
-    iso3  CHAR(3)       PRIMARY KEY,
+    iso3          CHAR(3)       PRIMARY KEY,
     country_name  VARCHAR(100)  NOT NULL,
     region        VARCHAR(100),
     income_group  VARCHAR(50)
@@ -17,8 +17,8 @@ CREATE TABLE countries (
 
 -- Labour force participation rates (overall, male, female) by year
 CREATE TABLE labour_participation (
-    id             SERIAL        PRIMARY KEY,
-    iso3   CHAR(3)       NOT NULL REFERENCES countries(iso3),
+    id             INTEGER       PRIMARY KEY,
+    iso3           CHAR(3)       NOT NULL REFERENCES countries(iso3),
     year           SMALLINT      NOT NULL,
     rate_total     NUMERIC(5,2),   -- SL.TLF.CACT.ZS
     rate_male      NUMERIC(5,2),   -- SL.TLF.CACT.MA.ZS
@@ -29,7 +29,7 @@ CREATE TABLE labour_participation (
 
 -- Age-group participation rates
 CREATE TABLE age_participation (
-    id             SERIAL        PRIMARY KEY,
+    id             INTEGER       PRIMARY KEY,
     iso3           CHAR(3)       NOT NULL REFERENCES countries(iso3),
     year           SMALLINT      NOT NULL,
     age_group      VARCHAR(20)   NOT NULL,  -- e.g. '15-24', '25-54', '55-64', '65+'
@@ -39,7 +39,7 @@ CREATE TABLE age_participation (
 
 -- Economic shocks / events for annotation
 CREATE TABLE labour_shocks (
-    id          SERIAL        PRIMARY KEY,
+    id          INTEGER       PRIMARY KEY,
     shock_year  SMALLINT      NOT NULL,
     shock_name  VARCHAR(100)  NOT NULL,
     description TEXT
@@ -47,7 +47,7 @@ CREATE TABLE labour_shocks (
 
 -- Sector employment shares (% of total employment)
 CREATE TABLE sector_employment (
-    id              SERIAL        PRIMARY KEY,
+    id              INTEGER       PRIMARY KEY,
     iso3            CHAR(3)       NOT NULL REFERENCES countries(iso3),
     year            SMALLINT      NOT NULL,
     sector          VARCHAR(50)   NOT NULL,  -- 'Agriculture','Industry','Services'
@@ -56,14 +56,15 @@ CREATE TABLE sector_employment (
 );
 
 -- Indexes for common query patterns
-CREATE INDEX idx_participation_country_year ON labour_participation(iso3, year);
-CREATE INDEX idx_age_country_year           ON age_participation(iso3, year);
-CREATE INDEX idx_sector_country_year        ON sector_employment(iso3, year);
+CREATE INDEX IF NOT EXISTS idx_participation_country_year ON labour_participation(iso3, year);
+CREATE INDEX IF NOT EXISTS idx_age_country_year           ON age_participation(iso3, year);
+CREATE INDEX IF NOT EXISTS idx_sector_country_year        ON sector_employment(iso3, year);
 
 -- Insert known economic shocks
 INSERT INTO labour_shocks (shock_year, shock_name, description) VALUES
-  (2001, 'Dot-com Bust',        'Collapse of the dot-com bubble; mild recession in advanced economies'),
+  (2001, 'Dot-com Bust',            'Collapse of the dot-com bubble; mild recession in advanced economies'),
   (2008, 'Global Financial Crisis', 'Severe global recession triggered by US subprime mortgage crisis'),
-  (2009, 'GFC Trough',          'Peak unemployment in most OECD countries following GFC'),
-  (2011, 'Euro Debt Crisis',    'Sovereign debt crisis in eurozone periphery'),
-  (2020, 'COVID-19 Pandemic',   'Global pandemic causing historic labour market disruptions');
+  (2009, 'GFC Trough',              'Peak unemployment in most OECD countries following GFC'),
+  (2011, 'Euro Debt Crisis',        'Sovereign debt crisis in eurozone periphery'),
+  (2020, 'COVID-19 Pandemic',       'Global pandemic causing historic labour market disruptions');
+
