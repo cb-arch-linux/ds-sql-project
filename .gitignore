@@ -1,22 +1,22 @@
-# Database files (never commit these)
+# Database files 
 *.db
 *.sqlite
 *.sqlite3
 *.mdb
 
-# Data dumps (can be large/sensitive)
+# Data dumps 
 *.sql.gz
 *.dump
 data/raw/*
 !data/raw/.gitkeep
 
-# Environment / credentials (NEVER commit)
+# Environment / credentials 
 .env
 *.env
 config.ini
 database.yml
 
-# Python (if using scripts to load data)
+# Python 
 __pycache__/
 venv/
 .venv/

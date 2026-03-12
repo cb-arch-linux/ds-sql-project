@@ -1,5 +1,4 @@
-sqlalchemy>=2.0
-psycopg2-binary
+sqlite3
 pandas
 matplotlib
 seaborn

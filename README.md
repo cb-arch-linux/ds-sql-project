@@ -9,7 +9,7 @@ Analysing differences in the US and German labour markets
 - Marwan
 
 ## Database System
-- **RDBMS:** PostgreSQL 15 
+- **RDBMS:** SQLite 
 
 ## Setup
 
@@ -22,15 +22,15 @@ cd ds-sql-project
 ### 2. Install the database
 ```bash
 # PostgreSQL (macOS)
-brew install postgresql
-brew services start postgresql
+brew install sqlite3
+brew services start sqlite3
 ```
 
 ## Project Structure
 ```
 ds-sql-project/
-├── data/         # Raw and processed data files
+├── data/         # Python script to fetch data
 ├── schema/       # Table definitions
 ├── queries/      # All SQL query files
-|__ analysis/     # Findings, graphs
+|__ analysis/     # Python output of queries, graphs
 ```
