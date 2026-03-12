@@ -1,0 +1,9 @@
+sqlalchemy>=2.0
+psycopg2-binary
+pandas
+matplotlib
+seaborn
+requests
+wbgapi
+numpy
+python-dotenv
