@@ -27,12 +27,12 @@ CREATE TABLE labour_participation (
     UNIQUE (iso3, year)
 );
 
--- Age-group participation rates
+-- Youth participation rates
 CREATE TABLE age_participation (
     id             INTEGER       PRIMARY KEY,
     iso3           CHAR(3)       NOT NULL REFERENCES countries(iso3),
     year           SMALLINT      NOT NULL,
-    age_group      VARCHAR(20)   NOT NULL,  -- e.g. '15-24', '25-54', '55-64', '65+'
+    age_group      VARCHAR(20)   NOT NULL, -- '15-24', '15-24 male', '15-24 female'
     participation  NUMERIC(5,2),
     UNIQUE (iso3, year, age_group)
 );
