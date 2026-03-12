@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 conn = sqlite3.connect("labour_market.db")
+COLORS = {"USA": "blue", "DEU": "red"}
+
 q1a = pd.read_sql("""
     SELECT
         iso3,
@@ -15,9 +17,9 @@ q1a = pd.read_sql("""
 """, conn)
 
 fig, ax = plt.subplots(figsize=(10, 6))
-
 for country, group in q1a.groupby("iso3"):
-    ax.plot(group["year"], group["rate_total"], label=country, linewidth=2)
+    ax.plot(group["year"], group["rate_total"],
+            label=country, linewidth=2, color=COLORS[country])
 
 ax.set_title("Labour Force Participation Rate: USA vs Germany (1990–2023)")
 ax.set_xlabel("Year")

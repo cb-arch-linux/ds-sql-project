@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 conn = sqlite3.connect("labour_market.db")
+COLORS = {"USA": "blue", "DEU": "red"}
 
 q1b = pd.read_sql("""
     SELECT
@@ -19,9 +20,8 @@ q1b = pd.read_sql("""
 """, conn)
 
 fig, ax = plt.subplots(figsize=(10, 6))
-
-ax.plot(q1b["year"], q1b["us_rate"], label="USA",     linewidth=2, color="red")
-ax.plot(q1b["year"], q1b["de_rate"], label="Germany", linewidth=2, color="blue")
+ax.plot(q1b["year"], q1b["us_rate"], label="USA",     linewidth=2, color=COLORS["USA"])
+ax.plot(q1b["year"], q1b["de_rate"], label="Germany", linewidth=2, color=COLORS["DEU"])
 ax.fill_between(q1b["year"], q1b["us_rate"], q1b["de_rate"], alpha=0.1, color="grey")
 ax.axhline(0, color="black", linewidth=0.8, linestyle="--")
 
@@ -39,6 +39,7 @@ lines1, labels1 = ax.get_legend_handles_labels()
 lines2, labels2 = ax2.get_legend_handles_labels()
 ax.legend(lines1 + lines2, labels1 + labels2, loc="lower left")
 ax.grid(True, alpha=0.3)
+
 plt.tight_layout()
 plt.savefig("/Users/cameronbahlmann/git-projects/ds-sql-project-1/analysis/graphs/q1b_gap.png", dpi=150)
 plt.show()
