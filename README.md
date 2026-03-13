@@ -1,7 +1,7 @@
 # RDBMS (SQL) Data Science Group Project
 
 Analysing structural differences in the US and German labour markets using
-World Bank World Development Indicators data, a SQLite relational database,
+World Bank World Development Indicators data, an SQLite relational database,
 and Python for data fetching, querying and visualisation.
 
 ## Team
@@ -25,8 +25,12 @@ ds-sql-project/
 │   ├── python/
 │   │   ├── question_1a.py   # Overall participation rates over time
 │   │   ├── question_1b.py   # Year-by-year participation rate gap
+│   │   ├── question_2a.py   # Male and female participation rates and gender gap
+│   │   ├── question_2b.py   # Gender gap difference between US and Germany
 │   │   ├── question_3a.py   # Youth participation rates by age group and gender
 │   │   ├── question_3b.py   # Youth participation rate difference US vs Germany
+│   │   ├── question_4a.py   # Participation rates annotated with economic shocks
+│   │   ├── question_4b.py   # Year-on-year change annotated with economic shocks
 │   │   ├── question_5a.py   # Sector employment data quality check
 │   │   ├── question_5b.py   # Sector employment shares over time
 │   │   └── question_5c.py   # Sector employment difference in most recent year
@@ -100,8 +104,12 @@ Run them from the root of the repository so the database path resolves correctly
 ```bash
 python analysis/python/question_1a.py
 python analysis/python/question_1b.py
+python analysis/python/question_2a.py
+python analysis/python/question_2b.py
 python analysis/python/question_3a.py
 python analysis/python/question_3b.py
+python analysis/python/question_4a.py
+python analysis/python/question_4b.py
 python analysis/python/question_5a.py
 python analysis/python/question_5b.py
 python analysis/python/question_5c.py
@@ -115,8 +123,12 @@ python analysis/python/question_5c.py
 |---|---|---|
 | Q1a | question_1a.py | How have overall participation rates evolved in the US and Germany since 1990? |
 | Q1b | question_1b.py | What is the year-by-year participation rate gap between the two countries? |
+| Q2a | question_2a.py | How do male and female participation rates differ and how has the gender gap changed? |
+| Q2b | question_2b.py | How does the gender gap difference between the US and Germany compare over time? |
 | Q3a | question_3a.py | How do youth participation rates compare across snapshot years? |
 | Q3b | question_3b.py | Which gender and age group shows the largest difference between countries? |
+| Q4a | question_4a.py | How do participation rate trends relate to known economic shocks? |
+| Q4b | question_4b.py | Which shock years produced the largest year-on-year drops in participation? |
 | Q5a | question_5a.py | Do the three sector employment shares sum to 100 for every country and year? |
 | Q5b | question_5b.py | How have sector employment shares shifted over time in each country? |
 | Q5c | question_5c.py | Which sectors show the largest employment share difference in the most recent year? |
