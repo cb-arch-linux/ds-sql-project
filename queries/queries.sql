@@ -1,6 +1,8 @@
 -- Q1: Overall labour force participation rates (US & Germany)
 
--- Query 1a: Participation rates for both countries over time
+-- Selects the total participation rate for the US (USA) and Germany (DEU).
+-- The IS NOT NULL excludes years where the World Bank has no recorded value, as NULL in SQL is not equivalent to zero and would produce blank rows.
+-- Results are ordered by country then year for consistent groupby behaviour when plotting.
 SELECT
     iso3,
     year,
@@ -11,7 +13,12 @@ WHERE iso3 IN ('USA', 'DEU')
 ORDER BY iso3, year;
 
 
--- Query 1b: Year-by-year gap between US and Germany (self-join)
+-- Self-join on labour_participation using two aliases: us for US rows and de for German rows. 
+-- Joining on year ensures each output row contains both countries' rates for the same year, allowing the gap to be computed as a single expression in SQL.
+-- INNER JOIN is used deliberately, if a year is missing for either country, that row is dropped entirely rather than returning a NULL gap that could be 
+-- misread as zero.
+-- Germany's filter is placed in the ON clause and the US filter in WHERE, which is the conventional pattern for self-joins in SQL.
+-- ROUND(..., 2) is applied to all numeric outputs for clean display, though the underlying data remains unchanged in the database.
 SELECT
     us.year,
     ROUND(us.rate_total, 2)               AS us_rate,
@@ -26,7 +33,11 @@ ORDER BY us.year;
 
 -- Q3: Participation rates by age group (15-24 only)
 
--- Query 3a: Pivot — rates for selected years by age group
+-- Pivot query using CASE WHEN inside SUM to extract participation rates for four snapshot years into separate columns. 
+-- For each country and age group combination returned by GROUP BY, the CASE WHEN tests whether the year matches the target.
+-- If it does, the participation rate is returned; if not, NULL is returned.
+-- SUM of a single non-null value alongside NULLs returns that value, effectively placing the rate for each specific year into its own column.
+-- ELSE NULL is included to make the intent clear when reading the code.
 SELECT
     iso3,
     age_group,
@@ -40,7 +51,12 @@ GROUP BY iso3, age_group
 ORDER BY iso3, age_group;
 
 
--- Query 3b: US vs Germany difference by age group (self-join)
+-- Self-join on age_participation using two aliases: a for US rows and b for German rows. 
+-- Joining on both year and age_group ensures rows are only paired when they represent the same year and the same age group.
+-- INNER JOIN is used deliberately so that if either country is missing a rate for a particular age group or year, that row is dropped entirely rather than
+-- returning a NULL difference that could be misread as zero.
+-- Germany's filter is placed in the ON clause and the US filter in WHERE, which is the conventional pattern for self-joins in SQL.
+-- ROUND(..., 2) is applied to all numeric outputs for clean display, though the underlying data remains unchanged in the database.
 SELECT
     a.year,
     a.age_group,
@@ -57,7 +73,9 @@ ORDER BY difference DESC;
 
 -- Q5: Sector employment shares (US & Germany)
 
--- Query 5a: Data quality check — sectors should sum to 100
+-- Aggregates the three sector shares for each country and year using SUM and GROUP BY. 
+-- ROUND(..., 1) is applied to smooth out minor floating point differences in the source data. 
+-- The result should be 100.0 for every row if the data is complete and consistent.
 SELECT
     iso3,
     year,
@@ -68,7 +86,13 @@ GROUP BY iso3, year
 ORDER BY iso3, year;
 
 
--- Query 5b: Pivot — sector shares for selected years
+-- Pivot query using CASE WHEN inside SUM to place each sector's employment share into its own column. 
+-- For each country and year combination returned by GROUP BY, the CASE WHEN tests whether the sector matches the target. 
+-- If it does, the employment share is returned; if not, NULL is returned. 
+-- SUM of a single non-null value alongside NULLs returns that value, effectively placing each sector's share 
+-- into its own column without needing to reshape the data in Python.
+-- IS NOT NULL in the WHERE clause excludes rows where the World Bank has no recorded value, 
+-- as fillna(0) below is only intended to handle structural gaps in the result rather than treating genuinely missing data as zero employment.
 SELECT
     iso3,
     year,
@@ -82,7 +106,13 @@ GROUP BY iso3, year
 ORDER BY iso3, year
 
 
--- Query 5c: US vs Germany sector difference in 2023 (self-join)
+-- Self-join on sector_employment using two aliases: a for US rows and b for German rows. 
+-- Joining on both year and sector ensures rows are only paired when they represent the same year and the same sector.
+-- INNER JOIN is used deliberately so that if either country is missing a sector in 2023, that row is dropped entirely rather than returning a NULL difference
+-- that could distort the chart.
+-- Germany's filter is placed in the ON clause and the US filter in WHERE.
+-- ROUND(..., 2) is applied to all numeric outputs for clean display, though the underlying data remains unchanged in the database.
+-- ORDER BY difference DESC means sectors where the US leads appear at the top of the chart and sectors where Germany leads appear at the bottom.
 SELECT
     a.sector,
     ROUND(a.employment_pct, 2)               AS us_pct,
