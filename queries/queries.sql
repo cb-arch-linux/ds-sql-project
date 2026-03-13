@@ -71,15 +71,15 @@ ORDER BY iso3, year;
 -- Query 5b: Pivot — sector shares for selected years
 SELECT
     iso3,
-    sector,
-    SUM(CASE WHEN year = 1991 THEN employment_pct ELSE NULL END) AS y1991,
-    SUM(CASE WHEN year = 2000 THEN employment_pct ELSE NULL END) AS y2000,
-    SUM(CASE WHEN year = 2010 THEN employment_pct ELSE NULL END) AS y2010,
-    SUM(CASE WHEN year = 2023 THEN employment_pct ELSE NULL END) AS y2023
+    year,
+        SUM(CASE WHEN sector = 'Agriculture' THEN employment_pct ELSE NULL END) AS Agriculture,
+        SUM(CASE WHEN sector = 'Industry'    THEN employment_pct ELSE NULL END) AS Industry,
+        SUM(CASE WHEN sector = 'Services'    THEN employment_pct ELSE NULL END) AS Services
 FROM sector_employment
 WHERE iso3 IN ('USA', 'DEU')
-GROUP BY iso3, sector
-ORDER BY iso3, sector;
+        AND employment_pct IS NOT NULL
+GROUP BY iso3, year
+ORDER BY iso3, year
 
 
 -- Query 5c: US vs Germany sector difference in 2023 (self-join)
