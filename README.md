@@ -48,7 +48,7 @@ ds-sql-project/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/username/ds-sql-project.git
+git clone https://github.com/cb-arch-linux/ds-sql-project
 cd ds-sql-project
 ```
 
