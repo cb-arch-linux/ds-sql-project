@@ -31,6 +31,41 @@ INNER JOIN labour_participation AS de
 WHERE us.iso3 = 'USA'
 ORDER BY us.year;
 
+-- Q2: Gender gaps in labour force participation (US & Germany)
+
+-- Male and female participation rates for both countries over time.
+-- Both rate_male and rate_female must be non-null to ensure gender_gap is meaningful. 
+-- Ordering by country then year produces consistent groupby behaviour when plotting.
+SELECT
+    iso3,
+    year,
+    rate_male,
+    rate_female,
+    gender_gap
+FROM labour_participation
+WHERE iso3 IN ('USA', 'DEU')
+    AND rate_male IS NOT NULL
+    AND rate_female IS NOT NULL
+ORDER BY iso3, year;
+
+
+-- Year-by-year comparison of gender gaps between the US and Germany using a self-join. 
+-- Each output row contains both countries gender gaps for the same year, allowing direct comparison and the difference to be computed in a single expression.
+-- INNER JOIN ensures only years where both countries have data are returned.
+SELECT
+    us.year,
+    ROUND(us.gender_gap, 2)                     AS us_gap,
+    ROUND(de.gender_gap, 2)                     AS de_gap,
+    ROUND(us.gender_gap - de.gender_gap, 2)     AS gap_difference
+FROM labour_participation AS us
+INNER JOIN labour_participation AS de
+    ON us.year = de.year
+    AND de.iso3 = 'DEU'
+WHERE us.iso3 = 'USA'
+    AND us.gender_gap IS NOT NULL
+    AND de.gender_gap IS NOT NULL
+ORDER BY us.year;
+
 -- Q3: Participation rates by age group (15-24 only)
 
 -- Pivot query using CASE WHEN inside SUM to extract participation rates for four snapshot years into separate columns. 
@@ -70,6 +105,44 @@ INNER JOIN age_participation AS b
     AND b.iso3 = 'DEU'
 WHERE a.iso3 = 'USA'
 ORDER BY difference DESC;
+
+-- Q4: Impact of economic shocks on participation rates
+
+-- Participation rates for both countries over time joined with the labour_shocks table to annotate shock years. 
+-- LEFT JOIN retains all participation rate rows regardless of whether a shock occurred that year, with shock_name returning NULL for non-shock years.
+SELECT
+    lp.iso3,
+    lp.year,
+    lp.rate_total,
+    ls.shock_name
+FROM labour_participation AS lp
+LEFT JOIN labour_shocks AS ls
+    ON lp.year = ls.shock_year
+WHERE lp.iso3 IN ('USA', 'DEU')
+    AND lp.rate_total IS NOT NULL
+ORDER BY lp.iso3, lp.year;
+
+
+-- Year-on-year change in participation rate for each country to isolate the impact of shock years. 
+-- A self-join on consecutive years (year = prev_year + 1) computes the change from one year to the next.
+-- Shock years are joined to identify which changes coincide with known events.
+-- INNER JOIN on consecutive years means the first year of data is excluded as there is no prior year to compare against.
+SELECT
+    curr.iso3,
+    curr.year,
+    ROUND(curr.rate_total, 2)                       AS rate,
+    ROUND(curr.rate_total - prev.rate_total, 2)     AS yoy_change,
+    ls.shock_name
+FROM labour_participation AS curr
+INNER JOIN labour_participation AS prev
+    ON curr.iso3 = prev.iso3
+    AND curr.year = prev.year + 1
+LEFT JOIN labour_shocks AS ls
+    ON curr.year = ls.shock_year
+WHERE curr.iso3 IN ('USA', 'DEU')
+    AND curr.rate_total IS NOT NULL
+    AND prev.rate_total IS NOT NULL
+ORDER BY curr.iso3, curr.year;
 
 -- Q5: Sector employment shares (US & Germany)
 
