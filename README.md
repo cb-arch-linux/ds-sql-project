@@ -5,10 +5,10 @@ World Bank World Development Indicators data, an SQLite relational database,
 and Python for data fetching, querying and visualisation.
 
 ## Team
-- Cam
-- Octavia
-- Ellie
-- Marwan
+- Candidate 740042462 - Set up and takeaway questions
+- Candidate 730005214 - Setting up presentation and presenting Q1, Q3, Q5
+- Candidate 740009082 - All of the code and GitHub setup
+- Candidate 740038491 - Setting up presentation and presenting Q2, Q4
 
 ---
 
@@ -57,6 +57,11 @@ cd ds-sql-project
 ```
 
 ### 2. Install dependencies
+
+SQLite3
+```bash
+  brew install sqlite3
+```
 
 Python 3.8 or later is required.
 ```bash
