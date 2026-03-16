@@ -5,7 +5,7 @@ World Bank World Development Indicators data, an SQLite relational database,
 and Python for data fetching, querying and visualisation.
 
 ## Team
-- Candidate 740042462 - Set up and takeaway questions
+- Candidate 740042462 - Coming up with set up and takeaway questions
 - Candidate 730005214 - Setting up presentation and presenting Q1, Q3, Q5
 - Candidate 740009082 - All of the code and GitHub setup
 - Candidate 740038491 - Setting up presentation and presenting Q2, Q4
