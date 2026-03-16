@@ -60,7 +60,7 @@ cd ds-sql-project
 
 SQLite3
 ```bash
-  brew install sqlite3
+brew install sqlite3
 ```
 
 Python 3.8 or later is required.
