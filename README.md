@@ -58,11 +58,6 @@ cd ds-sql-project
 
 ### 2. Install dependencies
 
-SQLite3
-```bash
-brew install sqlite3
-```
-
 Python 3.8 or later is required.
 ```bash
 pip install -r requirements.txt
